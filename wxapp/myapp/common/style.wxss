@@ -1,0 +1,5 @@
+a {
+  text-overflow: clip;
+  -webkit-align-self: auto;
+  align-self: auto;
+}

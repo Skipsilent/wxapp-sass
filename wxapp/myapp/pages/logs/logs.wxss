@@ -1,0 +1,7 @@
+body {
+  background: #ddd;
+}
+
+body div {
+  width: 500rpx;
+}

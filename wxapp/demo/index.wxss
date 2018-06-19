@@ -1,0 +1,7 @@
+body {
+  height: 100px;
+}
+
+body div {
+  width: 200px;
+}

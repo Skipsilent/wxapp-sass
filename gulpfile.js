@@ -4,7 +4,7 @@ var gulp = require('gulp'),
  uglify = require('gulp-uglify'),
  rename = require('gulp-rename'),
  minifycss = require('gulp-minify-css'),
-//  clean = require('gulp-clean'),
+//  replace = require('gulp-replace'),
 //  watch = require('gulp-watch'),
  notify = require('gulp-notify'),
   // sourcemaps=require('gulp-sourcemaps'),
@@ -14,9 +14,10 @@ var gulp = require('gulp'),
 AutoPrefix=require('gulp-autoprefixer')
 // LessPluginAutoPrefix = require('less-plugin-autoprefix');
 // var autoprefixer = LessPluginAutoPrefix({
-//     browsers:config.browsers,
-//     cascade: true
-// });
+    //     browsers:config.browsers,
+    //     cascade: true
+    // });
+eslint = require('gulp-eslint');
 
 var env = {
     production: false
@@ -32,12 +33,24 @@ gulp.task('sass', function () {
         browsers:config.browsers,
         cascade: true
     }))
+    // .pipe(replace('!--','--!'))
     .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
     // .pipe(sourcemaps.write())
     .pipe(rename((path) => {path.basename =path.basename.replace('.scss','') ;path.extname = '.wxss'}))
     .pipe(gulp.dest(config.scss.dist));
 });
 
+// js
+gulp.task('js', function() {
+    return gulp.src(config.js.src)
+    .pipe(eslint())
+        // eslint.format() outputs the lint results to the console.
+        // Alternatively use eslint.formatEach() (see Docs).
+        .pipe(eslint.format())
+        // To have the process exit with an error code (1) on
+        // lint error, return the stream and pipe to failAfterError last.
+        // .pipe(eslint.failAfterError());
+})
 // // 样式~
 // gulp.task('less',function(){
 //   if(env.production){
@@ -69,12 +82,13 @@ gulp.task('sass', function () {
 //   }
 // })
 // 开发环境
-gulp.task('dev',['sass'], function() {
+gulp.task('dev',['sass','js'], function() {
   // 看守所有.less档
   // gulp.watch(config.less.watchSrc, ['less']);
   // 看守所有.sass档
   console.log('config.scss.watchSrc',config.scss.watchSrc)
    gulp.watch(config.scss.watchSrc, ['sass']);
+   gulp.watch(config.js.watchSrc, ['js']);
     // var auto={};
 });
 gulp.task('production',['production_','sass']);
